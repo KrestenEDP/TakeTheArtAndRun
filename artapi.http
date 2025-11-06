@@ -1,0 +1,6 @@
+@artapi_HostAddress = http://localhost:5113
+
+GET {{artapi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

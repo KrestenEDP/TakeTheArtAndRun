@@ -27,4 +27,10 @@ RUN dotnet publish "./artapi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Environment variables for production (values will be set at runtime)
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ConnectionStrings__DefaultConnection=""
+ENV Jwt__Key=""
+
 ENTRYPOINT ["dotnet", "artapi.dll"]

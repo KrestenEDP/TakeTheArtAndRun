@@ -1,13 +1,13 @@
-﻿namespace TakeTheArtAndRunAPI.Controllers;
+﻿namespace artapi.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using TakeTheArtAndRunAPI.Data;
-using TakeTheArtAndRunAPI.DTOs;
-using TakeTheArtAndRunAPI.Mappers;
-using TakeTheArtAndRunAPI.Models;
+using artapi.Data;
+using artapi.DTOs;
+using artapi.Mappers;
+using artapi.Models;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,7 +20,6 @@ public class AuctionsController(AppDbContext context) : ControllerBase
     public async Task<ActionResult<IEnumerable<AuctionReadDto>>> GetAuctionsAsync()
     {
         var auctions = await _context.Auctions
-            .Where(a => !a.IsSold)
             .ToListAsync();
 
         var dtos = auctions.Select(a => a.ToDto()).ToList();
@@ -29,8 +28,7 @@ public class AuctionsController(AppDbContext context) : ControllerBase
     }
 
     // GET /api/auctions/{id}
-    [HttpGet]
-    [Route("{id}")]
+    [HttpGet("{id}", Name = "GetAuctionById")]
     public async Task<ActionResult<AuctionReadDto>> GetAuctionByIdAsync(Guid id)
     {
         var auction = await _context.Auctions
@@ -45,31 +43,34 @@ public class AuctionsController(AppDbContext context) : ControllerBase
 
     // POST /api/auctions
     [HttpPost]
-    [Authorize(Roles = "Artist")]
+    [Authorize(Policy = Policies.Artist)]
     public async Task<ActionResult<AuctionReadDto>> CreateAuctionAsync([FromBody] AuctionWriteDto dto)
     {
-        var artistId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var artist = await _context.Artists.FirstOrDefaultAsync(a => a.UserId == userId);
+        if (artist == null) return Forbid("You must be an artistId to create an auction.");
         var newAuction = new Auction
         (
             title: dto.Title,
-            artistId: artistId,
+            artistId: artist.Id,
+            artistName: artist.Name,
+            artistBio: artist.Bio,
             imageUrl: dto.ImageUrl,
             limit: dto.Limit,
             medium: dto.Medium,
-            dimensions: dto.Dimensions,
-            artistBio: dto.ArtistBio
+            dimensions: dto.Dimensions
         );
 
         _context.Auctions.Add(newAuction);
         await _context.SaveChangesAsync();
 
         var readDto = newAuction.ToDto();
-        return CreatedAtAction(nameof(GetAuctionByIdAsync), new { id = newAuction.Id }, readDto);
+        return CreatedAtAction("GetAuctionById", new { id = newAuction.Id }, readDto);
     }
 
-    // PUT /api/auctions/{id} - only the artist who created it
+    // PUT /api/auctions/{id} - only the artistId who created it
     [HttpPut("{id}")]
-    [Authorize(Roles = "Artist")]
+    [Authorize(Policy = Policies.Artist)]
     public async Task<IActionResult> UpdateAuctionAsync(Guid id, [FromBody] AuctionWriteDto dto)
     {
         var auction = await _context.Auctions.FindAsync(id);
@@ -87,7 +88,6 @@ public class AuctionsController(AppDbContext context) : ControllerBase
         auction.Limit = dto.Limit;
         auction.Medium = dto.Medium;
         auction.Dimensions = dto.Dimensions;
-        auction.ArtistBio = dto.ArtistBio;
 
         await _context.SaveChangesAsync();
         return Ok();
@@ -115,7 +115,7 @@ public class AuctionsController(AppDbContext context) : ControllerBase
         }
 
         await _context.SaveChangesAsync();
-        return Ok();
+        return Ok(sold);
     }
 }
 

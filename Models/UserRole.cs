@@ -1,4 +1,4 @@
-﻿namespace TakeTheArtAndRunAPI.Models;
+﻿namespace artapi.Models;
 
 public enum UserRole
 {

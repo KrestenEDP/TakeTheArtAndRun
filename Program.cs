@@ -1,5 +1,12 @@
+using artapi.Controllers;
+using artapi.Data;
+using artapi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TakeTheArtAndRunAPI.Data;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +28,42 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     }
 });
 
+// Identity
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+// JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.");
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.UseSecurityTokenValidators = true;
+    options.RequireHttpsMetadata = false; // <--- allow HTTP for local testing
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = key,
+        RoleClaimType = ClaimsIdentity.DefaultRoleClaimType,
+        NameClaimType = ClaimTypes.NameIdentifier,
+    };
+});
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(Policies.Admin, policy =>
+        policy.RequireClaim(ClaimsIdentity.DefaultRoleClaimType, "Admin"))
+    .AddPolicy(Policies.Artist, policy =>
+        policy.RequireClaim(ClaimsIdentity.DefaultRoleClaimType, "Artist"));
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
@@ -33,12 +76,10 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Auto-create database in development
+// Auto-create database and seed in development
 if (app.Environment.IsDevelopment())
 {
-    using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.EnsureCreated(); // This creates the database if it doesn't exist
+    await DbSeeder.SeedAsync(app);
 }
 
 // Configure the HTTP request pipeline.
@@ -52,11 +93,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
-
-//app.UseHttpsRedirection();
-
+app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

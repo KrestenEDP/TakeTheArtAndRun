@@ -12,19 +12,6 @@ namespace artapi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Artists",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Bio = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Artists", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -65,27 +52,6 @@ namespace artapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Auctions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ArtistId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
-                    ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
-                    Limit = table.Column<decimal>(type: "TEXT", nullable: false),
-                    HighestBid = table.Column<decimal>(type: "TEXT", nullable: false),
-                    BidCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    Medium = table.Column<string>(type: "TEXT", nullable: false),
-                    Dimensions = table.Column<string>(type: "TEXT", nullable: false),
-                    ArtistBio = table.Column<string>(type: "TEXT", nullable: false),
-                    IsSold = table.Column<bool>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Auctions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -102,6 +68,28 @@ namespace artapi.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Artists",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Bio = table.Column<string>(type: "TEXT", nullable: false),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Artists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Artists_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -192,6 +180,34 @@ namespace artapi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Auctions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ArtistId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ArtistName = table.Column<string>(type: "TEXT", nullable: false),
+                    ArtistBio = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Limit = table.Column<decimal>(type: "TEXT", nullable: false),
+                    HighestBid = table.Column<decimal>(type: "TEXT", nullable: false),
+                    BidCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    Medium = table.Column<string>(type: "TEXT", nullable: false),
+                    Dimensions = table.Column<string>(type: "TEXT", nullable: false),
+                    IsSold = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Auctions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Auctions_Artists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "Artists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
@@ -217,6 +233,12 @@ namespace artapi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Artists_UserId",
+                table: "Artists",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -256,6 +278,11 @@ namespace artapi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Auctions_ArtistId",
+                table: "Auctions",
+                column: "ArtistId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_AuctionId",
                 table: "Transactions",
                 column: "AuctionId");
@@ -269,9 +296,6 @@ namespace artapi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Artists");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -294,10 +318,13 @@ namespace artapi.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Auctions");
 
             migrationBuilder.DropTable(
-                name: "Auctions");
+                name: "Artists");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

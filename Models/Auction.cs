@@ -1,12 +1,15 @@
 ﻿using System.Security.Cryptography;
 
-namespace TakeTheArtAndRunAPI.Models;
+namespace artapi.Models;
 
 public class Auction
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
 
     public Guid ArtistId { get; private set; }
+    public string ArtistName { get; set; } = string.Empty;
+    public string ArtistBio { get; set; } = string.Empty;
+    public Artist? Artist { get; private set; } // navigation
     public string Title { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
     public decimal Limit { get; set; }
@@ -14,15 +17,15 @@ public class Auction
     public int BidCount { get; private set; } = 0;
     public string Medium { get; set; } = string.Empty;
     public string Dimensions { get; set; } = string.Empty;
-    public string ArtistBio { get; set; } = string.Empty;
     public Boolean IsSold { get; private set; } = false;
 
     private Auction() { }
 
-    public Auction(string title, Guid artistId, string imageUrl, decimal limit, string medium, string dimensions, string artistBio)
+    public Auction(string title, Guid artistId, string artistName, string imageUrl, decimal limit, string medium, string dimensions, string artistBio)
     {
         Title = title;
         ArtistId = artistId;
+        ArtistName = artistName;
         ImageUrl = imageUrl;
         Limit = decimal.Round(limit, 2);
         Medium = medium;

@@ -5,10 +5,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TakeTheArtAndRunAPI.Data;
-using TakeTheArtAndRunAPI.Models;
+using artapi.Data;
+using artapi.Mappers;
+using artapi.Models;
 
-namespace TakeTheArtAndRunAPI.Controllers;
+namespace artapi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -25,37 +26,20 @@ public class AuthController(
         {
             UserName = dto.Email,
             Email = dto.Email,
-            Role = dto.Role
+            Role = UserRole.User,
         };
+
+        if (await userManager.FindByEmailAsync(dto.Email) != null)
+            return BadRequest(new { message = "Email is already registered." });
 
         var result = await userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        await userManager.AddToRoleAsync(user, dto.Role.ToString());
+        await userManager.AddToRoleAsync(user, UserRole.User.ToString());
 
-        var claims = new[]
-    {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Email!),
-        new Claim("role", user.Role.ToString()),
-        new Claim(ClaimTypes.NameIdentifier, user.Id)
-    };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var token = new JwtSecurityToken(
-            expires: DateTime.Now.AddHours(2),
-            signingCredentials: creds,
-            claims: claims
-        );
-
-        var userDto = new
-        {
-            user.Id,
-            user.Email,
-            Role = user.Role.ToString(),
-            Transactions = new List<object>()
-        };
+        var token = GenerateJwtToken(user);
+        var userDto = GenerateUserDto(user);
 
         return Ok(new
         {
@@ -75,10 +59,21 @@ public class AuthController(
         if (user == null || !await userManager.CheckPasswordAsync(user, dto.Password))
             return Unauthorized(new { message = "Invalid credentials." });
 
+        var token = GenerateJwtToken(user);
+        var userDto = GenerateUserDto(user);
+
+        return Ok(new
+        {
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            user = userDto
+        });
+    }
+
+    private JwtSecurityToken GenerateJwtToken(User user)
+    {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email!),
-            new Claim("role", user.Role.ToString()),
+            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
 
@@ -90,37 +85,21 @@ public class AuthController(
             claims: claims
         );
 
+        return token;
+    }
+
+    private static object GenerateUserDto(User user)
+    {
         var userDto = new
         {
             user.Id,
             user.Email,
             Role = user.Role.ToString(),
-            Transactions = user.Transactions.Select(t => new
-            {
-                t.Id,
-                t.AmountPaid,
-                t.PurchasedAt,
-                Auction = t.Auction is not null
-                    ? new
-                    {
-                        t.Auction.Id,
-                        t.Auction.Title,
-                        t.Auction.ImageUrl,
-                        t.Auction.HighestBid,
-                        t.Auction.Medium,
-                        t.Auction.Dimensions
-                    }
-                    : null
-            })
         };
 
-        return Ok(new
-        {
-            token = new JwtSecurityTokenHandler().WriteToken(token),
-            user = userDto
-        });
+        return userDto;
     }
 }
 
-public record RegisterDto(string Email, string Password, UserRole Role=UserRole.User);
+public record RegisterDto(string Email, string Password);
 public record LoginDto(string Email, string Password);

@@ -1,4 +1,4 @@
-﻿namespace TakeTheArtAndRunAPI.DTOs;
+﻿namespace artapi.DTOs;
 
 public class AuctionWriteDto
 {
@@ -7,5 +7,4 @@ public class AuctionWriteDto
     public decimal Limit { get; set; }
     public string Medium { get; set; } = string.Empty;
     public string Dimensions { get; set; } = string.Empty;
-    public string ArtistBio { get; set; } = string.Empty;
 }

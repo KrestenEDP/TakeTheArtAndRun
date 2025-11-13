@@ -1,7 +1,7 @@
-﻿namespace TakeTheArtAndRunAPI.Mappers;
+﻿namespace artapi.Mappers;
 
-using TakeTheArtAndRunAPI.DTOs;
-using TakeTheArtAndRunAPI.Models;
+using artapi.DTOs;
+using artapi.Models;
 
 public static class AuctionMapper
 {
@@ -10,14 +10,15 @@ public static class AuctionMapper
         return new AuctionReadDto
         {
             Id = auction.Id,
-            ArtistId = auction.ArtistId,
+            ArtistName = auction.ArtistName,
             Title = auction.Title,
             ImageUrl = auction.ImageUrl,
             HighestBid = auction.HighestBid,
             BidCount = auction.BidCount,
             Medium = auction.Medium,
             Dimensions = auction.Dimensions,
-            ArtistBio = auction.ArtistBio
+            ArtistBio = auction.ArtistBio,
+            IsSold = auction.IsSold
         };
     }
 }

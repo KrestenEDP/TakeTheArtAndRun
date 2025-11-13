@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TakeTheArtAndRunAPI.Data;
+using artapi.Data;
 
 #nullable disable
 
 namespace artapi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251110163745_InitialCreate")]
+    [Migration("20251113170650_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -148,7 +148,7 @@ namespace artapi.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TakeTheArtAndRunAPI.Models.Artist", b =>
+            modelBuilder.Entity("artapi.Models.Artist", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,16 +158,31 @@ namespace artapi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Artists");
                 });
 
-            modelBuilder.Entity("TakeTheArtAndRunAPI.Models.Auction", b =>
+            modelBuilder.Entity("artapi.Models.Auction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,6 +193,10 @@ namespace artapi.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ArtistId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ArtistName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("BidCount")
@@ -210,10 +229,12 @@ namespace artapi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ArtistId");
+
                     b.ToTable("Auctions");
                 });
 
-            modelBuilder.Entity("TakeTheArtAndRunAPI.Models.Transaction", b =>
+            modelBuilder.Entity("artapi.Models.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -241,7 +262,7 @@ namespace artapi.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("TakeTheArtAndRunAPI.Models.User", b =>
+            modelBuilder.Entity("artapi.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -320,7 +341,7 @@ namespace artapi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TakeTheArtAndRunAPI.Models.User", null)
+                    b.HasOne("artapi.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -329,7 +350,7 @@ namespace artapi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TakeTheArtAndRunAPI.Models.User", null)
+                    b.HasOne("artapi.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -344,7 +365,7 @@ namespace artapi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TakeTheArtAndRunAPI.Models.User", null)
+                    b.HasOne("artapi.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -353,31 +374,60 @@ namespace artapi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TakeTheArtAndRunAPI.Models.User", null)
+                    b.HasOne("artapi.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TakeTheArtAndRunAPI.Models.Transaction", b =>
+            modelBuilder.Entity("artapi.Models.Artist", b =>
                 {
-                    b.HasOne("TakeTheArtAndRunAPI.Models.Auction", "Auction")
+                    b.HasOne("artapi.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("artapi.Models.Artist", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("artapi.Models.Auction", b =>
+                {
+                    b.HasOne("artapi.Models.Artist", "Artist")
+                        .WithMany("Auctions")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+                });
+
+            modelBuilder.Entity("artapi.Models.Transaction", b =>
+                {
+                    b.HasOne("artapi.Models.Auction", "Auction")
                         .WithMany()
                         .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TakeTheArtAndRunAPI.Models.User", null)
+                    b.HasOne("artapi.Models.User", "User")
                         .WithMany("Transactions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Auction");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TakeTheArtAndRunAPI.Models.User", b =>
+            modelBuilder.Entity("artapi.Models.Artist", b =>
+                {
+                    b.Navigation("Auctions");
+                });
+
+            modelBuilder.Entity("artapi.Models.User", b =>
                 {
                     b.Navigation("Transactions");
                 });

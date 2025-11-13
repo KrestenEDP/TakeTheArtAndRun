@@ -37,5 +37,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .WithMany(u => u.Transactions)
             .HasForeignKey(t => t.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Explicit decimal precision for SQL Server portability
+        modelBuilder.Entity<Auction>()
+            .Property(a => a.Limit)
+            .HasPrecision(18,2);
+        modelBuilder.Entity<Auction>()
+            .Property(a => a.HighestBid)
+            .HasPrecision(18,2);
+        modelBuilder.Entity<Transaction>()
+            .Property(t => t.AmountPaid)
+            .HasPrecision(18,2);
     }
 }

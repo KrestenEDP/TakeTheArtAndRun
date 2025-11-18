@@ -69,23 +69,21 @@ builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowUI", policy =>
-        policy.WithOrigins("https://art-ui.agreeablesky-ea2ae127.swedencentral.azurecontainerapps.io")
-              .AllowAnyOrigin()
+        policy.WithOrigins(
+            "https://art-ui.agreeablesky-ea2ae127.swedencentral.azurecontainerapps.io",
+            "http://localhost:5173"
+            )
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-// Auto-create database and seed in development
+
+// Configure the HTTP request pipeline and auto-create database and seed in development
 if (app.Environment.IsDevelopment())
 {
     await DbSeeder.SeedAsync(app);
-}
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
@@ -94,7 +92,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowUI");
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

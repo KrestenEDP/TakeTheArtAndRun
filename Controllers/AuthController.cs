@@ -24,7 +24,7 @@ public class AuthController(
     {
         var user = new User
         {
-            UserName = dto.Email,
+            UserName = dto.UserName,
             Email = dto.Email,
             Role = UserRole.User,
         };
@@ -93,6 +93,7 @@ public class AuthController(
         var userDto = new
         {
             user.Id,
+            user.UserName,
             user.Email,
             Role = user.Role.ToString(),
         };
@@ -101,5 +102,5 @@ public class AuthController(
     }
 }
 
-public record RegisterDto(string Email, string Password);
+public record RegisterDto(string UserName, string Email, string Password);
 public record LoginDto(string Email, string Password);

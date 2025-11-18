@@ -36,15 +36,7 @@ public class AuthController(
         if (user == null)
             return Unauthorized("User not found.");
 
-        var userDto = new
-        {
-            user.Id,
-            user.UserName,
-            user.Email,
-            Role = user.Role.ToString()
-        };
-
-        return Ok(userDto);
+        return Ok(GenerateUserDto(user));
     }
 
     [HttpPost("register")]

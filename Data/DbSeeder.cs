@@ -46,13 +46,15 @@ namespace artapi.Data
                 (
                     "Maelle Dessendre",
                     "maelleDes@abracadabra.com",
-                    "https://images.steamusercontent.com/ugc/10549703576396892245/C9D46CDB01391AD4652F41B34904B3C75D084477/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true",
+                    // Public domain (Wikimedia Commons)
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Mona_Lisa.jpg/800px-Mona_Lisa.jpg",
                     "Maelle is a fiercely talented artist and a masterful duelist,\r\nblending elegance and edge in everything she does. Her creations captivate,\r\nher blade commands respect—and whether on canvas or in combat, she never misses her mark."
                 ),
                 (
                     "Alex Shadow",
                     "AlexDarktherThanEdge@abracadabra.com",
-                    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
+                    // Public domain (Wikimedia Commons)
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/The_Starry_Night.jpg/800px-The_Starry_Night.jpg",
                     "Alex is a bold and talented painter whose edgy, distinctive style turns heads and challenges norms.\r\nKnown in the art world as ‘Alex the Edger,’ their work cuts through convention with raw expression and fearless creativity."
                 )
             };
@@ -108,7 +110,8 @@ namespace artapi.Data
                     "Fencing Duel",
                     maelle.Id,
                     maelle.Name,
-                    "https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=800&q=80",
+                    // Public domain (Wikimedia Commons) - Mariano Fortuny, The Fencing Master
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Mariano_Fortuny_-_The_Fencing_Master_-_Google_Art_Project.jpg/800px-Mariano_Fortuny_-_The_Fencing_Master_-_Google_Art_Project.jpg",
                     500,
                     "Oil on Canvas",
                     "24x36",
@@ -121,7 +124,8 @@ namespace artapi.Data
                     "Edge of Darkness",
                     alex.Id,
                     alex.Name,
-                    "https://images.unsplash.com/photo-1583119912267-cc97c911e416?w=800&q=80",
+                    // Public domain (Wikimedia Commons) - Caspar David Friedrich, Monk by the Sea
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Caspar_David_Friedrich_-_Monk_by_the_Sea.jpg/800px-Caspar_David_Friedrich_-_Monk_by_the_Sea.jpg",
                     750,
                     "Acrylic",
                     "30x40",

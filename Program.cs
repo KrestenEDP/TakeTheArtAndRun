@@ -83,13 +83,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline and auto-create database and seed in development
 if (app.Environment.IsDevelopment())
 {
-    await DbSeeder.SeedAsync(app);
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "artapi v1");
     });
 }
+
+await DbSeeder.SeedAsync(app); // Cursed seeding. Should not be used in actual production.
 
 app.UseCors("AllowUI");
 if (!app.Environment.IsDevelopment())

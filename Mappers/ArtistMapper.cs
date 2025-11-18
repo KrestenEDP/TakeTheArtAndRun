@@ -13,7 +13,8 @@ public static class ArtistMapper
             Name = artist.Name,
             Bio = artist.Bio,
             ImageUrl = artist.ImageUrl,
-            Email = artist.Email
+            Email = artist.Email,
+            UserId = artist.UserId
         };
     }
 }

@@ -74,20 +74,20 @@ public class AuctionsControllerTests
     }
 
     [Fact]
-    public async Task GetAuctions_OnlyUnsoldAuctions_ReturnsUnsoldAuctions()
+    public async Task GetAuctions_Auctions_ReturnsAllAuctions()
     {
         var result = await _controller.GetAuctionsAsync();
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var auctions = Assert.IsType<IEnumerable<AuctionReadDto>>(okResult.Value, exactMatch: false);
 
-        Assert.Single(auctions);
+        Assert.Equal(2, auctions.Count());
         Assert.Equal("Auction 1", auctions.First().Title);
     }
 
     [Fact]
     public async Task GetAuctionById_ValidId_ReturnsAuction()
     {
-        var auction = _context.Auctions.First(a => !a.IsSold);
+        var auction = _context.Auctions.First();
         var result = await _controller.GetAuctionByIdAsync(auction.Id);
 
         var okResult = Assert.IsType<OkObjectResult>(result.Result);

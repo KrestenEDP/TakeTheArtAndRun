@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using artapi.Data;
+using artapi.Mappers;
+using artapi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using artapi.Data;
-using artapi.Mappers;
-using artapi.Models;
 
 namespace artapi.Controllers;
 
@@ -19,6 +20,33 @@ public class AuthController(
     IConfiguration config,
     AppDbContext context) : ControllerBase
 {
+    [HttpGet("validate")]
+    [Authorize] // only accessible if a valid JWT token is provided
+    public async Task<IActionResult> Validate()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized("Invalid token.");
+
+        var user = await context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+            return Unauthorized("User not found.");
+
+        var userDto = new
+        {
+            user.Id,
+            user.UserName,
+            user.Email,
+            Role = user.Role.ToString()
+        };
+
+        return Ok(userDto);
+    }
+
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
@@ -80,7 +108,7 @@ public class AuthController(
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
-            expires: DateTime.Now.AddHours(2),
+            expires: DateTime.Now.AddDays(1),
             signingCredentials: creds,
             claims: claims
         );

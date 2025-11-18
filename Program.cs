@@ -68,8 +68,9 @@ builder.Services.AddAuthorizationBuilder()
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-        policy.AllowAnyOrigin()
+    options.AddPolicy("AllowUI", policy =>
+        policy.WithOrigins("https://art-ui.agreeablesky-ea2ae127.swedencentral.azurecontainerapps.io")
+              .AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
@@ -92,7 +93,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("AllowAll");
+app.UseCors("AllowUI");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

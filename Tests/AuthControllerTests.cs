@@ -52,8 +52,9 @@ public class AuthControllerTests
     public async Task Register_ValidUser_ReturnsTokenAndUser()
     {
         // Arrange
+        var userName = "Test";
         var email = "test@example.com";
-        var dto = new RegisterDto(email, "Password123!");
+        var dto = new RegisterDto(userName, email, "Password123!");
 
         _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<User>(), dto.Password))
             .ReturnsAsync(IdentityResult.Success);
@@ -74,7 +75,7 @@ public class AuthControllerTests
     public async Task Register_InvalidUser_ReturnsBadRequest()
     {
         // Arrange
-        var dto = new RegisterDto("fail@example.com", "weak");
+        var dto = new RegisterDto("Invalid user", "fail@example.com", "weak");
 
         _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<User>(), dto.Password))
             .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Weak password" }));

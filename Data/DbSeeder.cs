@@ -16,7 +16,7 @@ namespace artapi.Data
             var userManager = services.GetRequiredService<UserManager<User>>();
 
             // Ensure database is created/migrated
-            context.Database.EnsureCreated();
+            await context.Database.MigrateAsync();
 
             // Seed roles
             string[] roles = ["User", "Artist", "Admin"];

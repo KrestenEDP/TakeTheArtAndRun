@@ -52,7 +52,7 @@ namespace artapi.Data
                     "Alex Shadow",
                     "AlexDarktherThanEdge@abracadabra.com",
                     "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
-                    "Alex is a bold and talented painter whose edgy, distinctive style turns heads and challenges norms.\r\nKnown in the art world as ‘Alex the Edger,’ their work cuts through convention with raw expression and fearless creativity."
+                    "Alex is a bold and talented painter whose edgy, distinctive style turns heads and challenges norms.\r\nKnown in the art world as 'Alex the Edger,' their work cuts through convention with raw expression and fearless creativity."
                 )
             };
 

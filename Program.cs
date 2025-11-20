@@ -78,12 +78,11 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
+await DbSeeder.SeedAsync(app);
 
 // Configure the HTTP request pipeline and auto-create database and seed in development
 if (app.Environment.IsDevelopment())
 {
-    await DbSeeder.SeedAsync(app);
     app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {

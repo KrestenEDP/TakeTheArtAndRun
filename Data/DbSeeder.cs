@@ -15,7 +15,6 @@ namespace artapi.Data
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = services.GetRequiredService<UserManager<User>>();
 
-            // Ensure database is created/migrated
             //await context.Database.MigrateAsync();
 
             // Seed roles

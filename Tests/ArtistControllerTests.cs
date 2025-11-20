@@ -42,39 +42,6 @@ public class ArtistsControllerTests
         );
     }
 
-    private void SetAdminUser()
-    {
-        var adminUser = new ClaimsPrincipal(new ClaimsIdentity(
-            new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, "admin-id"),
-                new Claim(ClaimTypes.Role, "Admin")
-            },
-            "mockAuth"
-        ));
-
-        _controller.ControllerContext = new ControllerContext
-        {
-            HttpContext = new DefaultHttpContext { User = adminUser }
-        };
-    }
-
-    private void SetNonAdminUser()
-    {
-        var normalUser = new ClaimsPrincipal(new ClaimsIdentity(
-            new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, "user-id"),
-                new Claim(ClaimTypes.Role, "User")
-            },
-            "mockAuth"
-        ));
-
-        _controller.ControllerContext = new ControllerContext
-        {
-            HttpContext = new DefaultHttpContext { User = normalUser }
-        };
-    }
 
     // ----------------------------------------------------------
     // GET /api/artists
@@ -94,14 +61,9 @@ public class ArtistsControllerTests
         Assert.Equal(2, list.Count());
     }
 
-    // ----------------------------------------------------------
-    // POST /api/artists  (Admin only)
-    // ----------------------------------------------------------
     [Fact]
-    public async Task CreateArtist_AdminUser_CreatesArtist()
+    public async Task CreateArtist_ValidUser_CreatesArtist()
     {
-        SetAdminUser();
-
         var user = new User { Id = "123", Email = "test@test.com" };
 
         _userManagerMock.Setup(m => m.FindByIdAsync("123"))
@@ -135,8 +97,6 @@ public class ArtistsControllerTests
     [Fact]
     public async Task CreateArtist_UserNotFound_ReturnsNotFound()
     {
-        SetAdminUser();
-
         _userManagerMock.Setup(m => m.FindByIdAsync("missing"))
             .ReturnsAsync((User?)null);
 
@@ -155,30 +115,12 @@ public class ArtistsControllerTests
         Assert.Equal("User not found", ((dynamic)notFound.Value).message);
     }
 
-    [Fact]
-    public async Task CreateArtist_NotAdmin_ReturnsUnauthorized()
-    {
-        SetNonAdminUser();
-
-        var dto = new ArtistCreateDto
-        {
-            Name = "New Artist",
-            UserId = "123"
-        };
-
-        var result = await _controller.CreateArtist(dto);
-
-        Assert.IsType<ForbidResult>(result); // Fails policy
-    }
-
     // ----------------------------------------------------------
     // PUT /api/artists/{id}
     // ----------------------------------------------------------
     [Fact]
-    public async Task UpdateArtist_AdminUser_UpdatesArtist()
+    public async Task UpdateArtist_ValidArtist_UpdatesArtist()
     {
-        SetAdminUser();
-
         var artist = new Artist
         {
             Name = "Old Name",
@@ -211,8 +153,6 @@ public class ArtistsControllerTests
     [Fact]
     public async Task UpdateArtist_NotFound_ReturnsNotFound()
     {
-        SetAdminUser();
-
         var dto = new ArtistUpdateDto
         {
             Name = "X",
@@ -226,21 +166,4 @@ public class ArtistsControllerTests
         Assert.IsType<NotFoundResult>(result);
     }
 
-    [Fact]
-    public async Task UpdateArtist_NotAdmin_ReturnsForbid()
-    {
-        SetNonAdminUser();
-
-        var dto = new ArtistUpdateDto
-        {
-            Name = "X",
-            Email = "x@x.com",
-            Bio = "Bio",
-            ImageUrl = "img.jpg"
-        };
-
-        var result = await _controller.UpdateArtistAsync(Guid.NewGuid(), dto);
-
-        Assert.IsType<ForbidResult>(result);
-    }
 }

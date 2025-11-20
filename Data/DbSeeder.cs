@@ -1,4 +1,4 @@
-ï»¿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using artapi.Models;
 
@@ -14,7 +14,7 @@ namespace artapi.Data
             var context = services.GetRequiredService<AppDbContext>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = services.GetRequiredService<UserManager<User>>();
-
+            // Should be used locally
             //await context.Database.MigrateAsync();
 
             // Seed roles
@@ -46,13 +46,13 @@ namespace artapi.Data
                     "Maelle Dessendre",
                     "maelleDes@abracadabra.com",
                     "https://images.steamusercontent.com/ugc/10549703576396892245/C9D46CDB01391AD4652F41B34904B3C75D084477/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true",
-                    "Maelle is a fiercely talented artist and a masterful duelist,\r\nblending elegance and edge in everything she does. Her creations captivate,\r\nher blade commands respectâ€”and whether on canvas or in combat, she never misses her mark."
+                    "Maelle is a fiercely talented artist and a masterful duelist,\r\nblending elegance and edge in everything she does. Her creations captivate,\r\nher blade commands respect—and whether on canvas or in combat, she never misses her mark."
                 ),
                 (
                     "Alex Shadow",
                     "AlexDarktherThanEdge@abracadabra.com",
                     "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
-                    "Alex is a bold and talented painter whose edgy, distinctive style turns heads and challenges norms.\r\nKnown in the art world as â€˜Alex the Edger,â€™ their work cuts through convention with raw expression and fearless creativity."
+                    "Alex is a bold and talented painter whose edgy, distinctive style turns heads and challenges norms.\r\nKnown in the art world as ‘Alex the Edger,’ their work cuts through convention with raw expression and fearless creativity."
                 )
             };
 

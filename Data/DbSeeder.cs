@@ -14,7 +14,7 @@ namespace artapi.Data
             var context = services.GetRequiredService<AppDbContext>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = services.GetRequiredService<UserManager<User>>();
-            // Should be used locally
+            
             //await context.Database.MigrateAsync();
 
             // Seed roles

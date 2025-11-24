@@ -81,7 +81,7 @@ public class AuctionsControllerTests
         var auctions = Assert.IsType<IEnumerable<AuctionReadDto>>(okResult.Value, exactMatch: false);
 
         Assert.Equal(2, auctions.Count());
-        Assert.Equal("Auction 1", auctions.First().Title);
+        Assert.Equal("Auction WRONG", auctions.First().Title);
     }
 
     [Fact]

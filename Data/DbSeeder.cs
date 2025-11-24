@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using artapi.Models;
 
@@ -14,9 +14,8 @@ namespace artapi.Data
             var context = services.GetRequiredService<AppDbContext>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = services.GetRequiredService<UserManager<User>>();
-
-            // Ensure database is created/migrated
-            await context.Database.MigrateAsync();
+            
+            //await context.Database.MigrateAsync();
 
             // Seed roles
             string[] roles = ["User", "Artist", "Admin"];
@@ -40,7 +39,7 @@ namespace artapi.Data
                 }
             }
 
-            // Seed Artists with copyright-free images (Unsplash)
+            // Seed Artists (and corresponding Identity users)
             var artistsData = new List<(string Name, string Email, string ImageUrl, string Bio)>
             {
                 (

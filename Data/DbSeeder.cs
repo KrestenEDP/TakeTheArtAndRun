@@ -126,7 +126,7 @@ namespace artapi.Data
             // Marcus's sculptures (6 pieces)
             if (marcus is not null)
             {
-                auctionsData.Add(new Auction("Reclaimed Beauty", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1515405295579", 1200, "Mixed Media Sculpture", "24x18x12 inches", marcusDescription));
+                auctionsData.Add(new Auction("Reclaimed Beauty", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1515405295579-ba7b45403062", 1200, "Mixed Media Sculpture", "24x18x12 inches", marcusDescription));
                 auctionsData.Add(new Auction("Industrial Harmony", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1549289524-06cf8837ace5", 950, "Steel and Wood", "36x24x18 inches", marcusDescription));
                 auctionsData.Add(new Auction("Memory Fragments", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1541961017774-22349e4a1262", 800, "Found Objects", "18x12x8 inches", marcusDescription));
                 auctionsData.Add(new Auction("Urban Totem", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4", 1500, "Mixed Media", "72x12x12 inches", marcusDescription));

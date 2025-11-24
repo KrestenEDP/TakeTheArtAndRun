@@ -45,19 +45,19 @@ namespace artapi.Data
                 (
                     "Elena Rivera",
                     "elena.rivera@artgallery.com",
-                    "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=400&h=400&fit=crop&crop=face",
+                    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face",
                     "Elena is a contemporary abstract painter known for her vibrant use of color and geometric forms. Her work explores themes of urban landscapes and human emotion through bold, expressive brushstrokes."
                 ),
                 (
                     "Marcus Chen",
                     "marcus.chen@artgallery.com", 
-                    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+                    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
                     "Marcus specializes in mixed media sculptures that blend traditional craftsmanship with modern materials. His pieces often incorporate found objects to create thought-provoking commentaries on consumer culture."
                 ),
                 (
                     "Sophie Laurent",
                     "sophie.laurent@artgallery.com",
-                    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face", 
+                    "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop&crop=face", 
                     "Sophie is a digital artist and photographer who creates surreal landscapes by combining traditional photography with digital manipulation. Her work blurs the line between reality and imagination."
                 )
             };
@@ -109,25 +109,25 @@ namespace artapi.Data
 
             var auctionsData = new List<Auction>();
 
-            // Elena's artworks (5 pieces)
+            // Elena's artworks (5 pieces) - Abstract paintings
             if (elena is not null)
             {
                 auctionsData.Add(new Auction("Urban Symphony", elena.Id, elena.Name, "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80", 850, "Acrylic on Canvas", "36x48", "A vibrant abstract piece capturing the energy of city life"));
                 auctionsData.Add(new Auction("Geometric Dreams", elena.Id, elena.Name, "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80", 650, "Mixed Media", "24x36", "Bold geometric forms in warm earth tones"));
-                auctionsData.Add(new Auction("Color Burst", elena.Id, elena.Name, "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80", 720, "Oil on Canvas", "30x40", "An explosion of primary colors in abstract form"));
-                auctionsData.Add(new Auction("Metropolitan Rhythm", elena.Id, elena.Name, "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80", 900, "Acrylic on Canvas", "48x60", "Large scale abstract representing urban movement"));
-                auctionsData.Add(new Auction("Harmony in Chaos", elena.Id, elena.Name, "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80", 780, "Mixed Media", "32x42", "Finding balance in abstract composition"));
+                auctionsData.Add(new Auction("Color Burst", elena.Id, elena.Name, "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80", 720, "Oil on Canvas", "30x40", "An explosion of primary colors in abstract form"));
+                auctionsData.Add(new Auction("Metropolitan Rhythm", elena.Id, elena.Name, "https://images.unsplash.com/photo-1574169208507-84376144848b?w=800&q=80", 900, "Acrylic on Canvas", "48x60", "Large scale abstract representing urban movement"));
+                auctionsData.Add(new Auction("Harmony in Chaos", elena.Id, elena.Name, "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=800&q=80", 780, "Mixed Media", "32x42", "Finding balance in abstract composition"));
             }
 
             // Marcus's sculptures (6 pieces)
             if (marcus is not null)
             {
-                auctionsData.Add(new Auction("Reclaimed Beauty", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80", 1200, "Mixed Media Sculpture", "24x18x12", "Sculpture made from recycled materials"));
-                auctionsData.Add(new Auction("Industrial Harmony", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80", 950, "Steel and Wood", "36x24x18", "Fusion of industrial and organic materials"));
-                auctionsData.Add(new Auction("Memory Fragments", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80", 800, "Found Objects", "18x12x8", "Assemblage of personal artifacts"));
-                auctionsData.Add(new Auction("Urban Totem", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80", 1500, "Mixed Media", "72x12x12", "Tall sculptural piece reflecting city life"));
-                auctionsData.Add(new Auction("Consumer Echo", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80", 675, "Plastic and Metal", "20x15x10", "Commentary on consumer culture"));
-                auctionsData.Add(new Auction("Metamorphosis", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80", 1100, "Bronze and Glass", "30x20x15", "Transformation through materials"));
+                auctionsData.Add(new Auction("Reclaimed Beauty", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1594736797933-d0d30d47df96?w=800&q=80", 1200, "Mixed Media Sculpture", "24x18x12", "Sculpture made from recycled materials"));
+                auctionsData.Add(new Auction("Industrial Harmony", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80", 950, "Steel and Wood", "36x24x18", "Fusion of industrial and organic materials"));
+                auctionsData.Add(new Auction("Memory Fragments", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&q=80", 800, "Found Objects", "18x12x8", "Assemblage of personal artifacts"));
+                auctionsData.Add(new Auction("Urban Totem", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1515405295579-ba7b45403062?w=800&q=80", 1500, "Mixed Media", "72x12x12", "Tall sculptural piece reflecting city life"));
+                auctionsData.Add(new Auction("Consumer Echo", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80", 675, "Plastic and Metal", "20x15x10", "Commentary on consumer culture"));
+                auctionsData.Add(new Auction("Metamorphosis", marcus.Id, marcus.Name, "https://images.unsplash.com/photo-1551558019-1b9ed0c4e1d8?w=800&q=80", 1100, "Bronze and Glass", "30x20x15", "Transformation through materials"));
             }
 
             // Sophie's digital art (8 pieces)
@@ -135,12 +135,12 @@ namespace artapi.Data
             {
                 auctionsData.Add(new Auction("Digital Landscape #1", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80", 450, "Digital Print", "24x36", "Surreal mountain landscape with digital effects"));
                 auctionsData.Add(new Auction("Neon Dreams", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&q=80", 380, "Digital Print", "20x30", "Cyberpunk-inspired cityscape"));
-                auctionsData.Add(new Auction("Ocean of Stars", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80", 520, "Digital Print", "30x45", "Cosmic seascape blending reality and fantasy"));
-                auctionsData.Add(new Auction("Virtual Reality", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&q=80", 600, "Digital Print", "36x48", "Exploration of digital vs physical reality"));
-                auctionsData.Add(new Auction("Fractured Time", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80", 480, "Digital Print", "28x40", "Time-lapse effects on natural landscape"));
-                auctionsData.Add(new Auction("Electric Forest", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&q=80", 420, "Digital Print", "22x32", "Nature enhanced with digital lighting"));
+                auctionsData.Add(new Auction("Ocean of Stars", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=800&q=80", 520, "Digital Print", "30x45", "Cosmic seascape blending reality and fantasy"));
+                auctionsData.Add(new Auction("Virtual Reality", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=800&q=80", 600, "Digital Print", "36x48", "Exploration of digital vs physical reality"));
+                auctionsData.Add(new Auction("Fractured Time", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=800&q=80", 480, "Digital Print", "28x40", "Time-lapse effects on natural landscape"));
+                auctionsData.Add(new Auction("Electric Forest", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80", 420, "Digital Print", "22x32", "Nature enhanced with digital lighting"));
                 auctionsData.Add(new Auction("Quantum Garden", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80", 550, "Digital Print", "32x44", "Botanical forms in impossible colors"));
-                auctionsData.Add(new Auction("Mirror Dimensions", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&q=80", 625, "Digital Print", "40x50", "Exploring parallel realities through visual manipulation"));
+                auctionsData.Add(new Auction("Mirror Dimensions", sophie.Id, sophie.Name, "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&q=80", 625, "Digital Print", "40x50", "Exploring parallel realities through visual manipulation"));
             }
 
             foreach (var auction in auctionsData)

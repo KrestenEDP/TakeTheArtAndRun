@@ -1,28 +1,55 @@
+name: Deploy to Azure
+
 on:
   push:
-    branches:
-    - main
+    branches: [ main ]
+
 env:
-  DOTNET_CORE_VERSION: 7.0.x
+  DOTNET_CORE_VERSION: 9.0.x
   CONTAINER_APP_NAME: artapi-container-app
   CONTAINER_APP_ENVIRONMENT_NAME: artEnv
   RESOURCE_GROUP: TakeTheArtAndRun
   CONTAINER_REGISTRY_NAME: taketheartandrun
   CONTAINER_REGISTRY_LOGIN_SERVER: taketheartandrun.azurecr.io
+
 jobs:
-  BuildAndDeployContainerApp:
+  test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
+      
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
+
+  BuildAndDeployContainerApp:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        
     - name: Azure login
       uses: azure/login@v2
       with:
         creds: ${{ secrets.artEnv_SPN }}
+        
     - name: Container App deploy
       uses: azure/container-apps-deploy-action@v1
       with:

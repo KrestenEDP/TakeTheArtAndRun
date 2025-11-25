@@ -13,8 +13,21 @@ env:
   CONTAINER_REGISTRY_LOGIN_SERVER: taketheartandrun.azurecr.io
 
 jobs:
+  dockerfile-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+      
+    - name: Run Hadolint
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: Dockerfile
+        failure-threshold: error
+
   test:
     runs-on: ubuntu-latest
+    needs: dockerfile-lint
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4

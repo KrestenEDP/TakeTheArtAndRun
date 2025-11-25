@@ -11,7 +11,7 @@ namespace artapi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController(UserManager<User> userManager, AppDbContext context) : ControllerBase
+public class UsersController(AppDbContext context) : ControllerBase
 {
     private readonly AppDbContext _context = context;
 
@@ -33,7 +33,7 @@ public class UsersController(UserManager<User> userManager, AppDbContext context
     public async Task<ActionResult<IEnumerable<UserReadDto>>> SearchUsers(string query)
     {
         var users = await _context.Users
-            .Where(u => u.UserName.Contains(query) || u.Email.Contains(query))
+            .Where(u => (u.UserName != null && u.UserName.Contains(query)) || (u.Email != null && u.Email.Contains(query)))
             .ToListAsync();
 
         if (users.Count == 0)

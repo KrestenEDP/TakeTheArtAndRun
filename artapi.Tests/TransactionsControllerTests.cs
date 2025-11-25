@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,10 +32,9 @@ public class TransactionsControllerTests
     private void SetUser(string userId)
     {
         var user = new ClaimsPrincipal(new ClaimsIdentity(
-            new[]
-            {
+            [
                 new Claim(ClaimTypes.NameIdentifier, userId)
-            }, "mock"));
+            ], "mock"));
 
         _controller.ControllerContext = new ControllerContext
         {
@@ -87,7 +86,7 @@ public class TransactionsControllerTests
 
         // Assert
         var ok = Assert.IsType<OkObjectResult>(result.Result);
-        var dtos = Assert.IsAssignableFrom<IEnumerable<TransactionReadDto>>(ok.Value);
+        var dtos = Assert.IsType<IEnumerable<TransactionReadDto>>(ok.Value, exactMatch: false);
 
         Assert.Single(dtos);
         Assert.Equal(tx.AmountPaid, dtos.First().Amount);
@@ -106,7 +105,7 @@ public class TransactionsControllerTests
         var result = await _controller.GetTransactionsAsync();
 
         var ok = Assert.IsType<OkObjectResult>(result.Result);
-        var dtos = Assert.IsAssignableFrom<IEnumerable<TransactionReadDto>>(ok.Value);
+        var dtos = Assert.IsType<IEnumerable<TransactionReadDto>>(ok.Value, exactMatch: false);
 
         Assert.Empty(dtos);
     }

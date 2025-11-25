@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using artapi.Controllers;
+﻿using artapi.Controllers;
 using artapi.Data;
 using artapi.DTOs;
 using artapi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -37,8 +34,17 @@ public class ArtistsControllerTests
     private static Mock<UserManager<User>> CreateUserManagerMock()
     {
         var store = new Mock<IUserStore<User>>();
+        // Provide default values for all non-nullable parameters
         return new Mock<UserManager<User>>(
-            store.Object, null, null, null, null, null, null, null, null
+            store.Object,
+            new Mock<IOptions<IdentityOptions>>().Object,        // IOptions<IdentityOptions>
+            new Mock<IPasswordHasher<User>>().Object,           // IPasswordHasher<User>
+            Array.Empty<IUserValidator<User>>(),                        // IUserValidator<User>[]
+            Array.Empty<IPasswordValidator<User>>(),                    // IPasswordValidator<User>[]
+            new Mock<ILookupNormalizer>().Object,              // ILookupNormalizer
+            new Mock<IdentityErrorDescriber>().Object,         // IdentityErrorDescriber
+            new Mock<IServiceProvider>().Object,               // IServiceProvider
+            new Mock<ILogger<UserManager<User>>>().Object       // ILogger<UserManager<User>>
         );
     }
 
@@ -56,7 +62,7 @@ public class ArtistsControllerTests
         var result = await _controller.GetArtistsAsync();
 
         var ok = Assert.IsType<OkObjectResult>(result.Result);
-        var list = Assert.IsAssignableFrom<IEnumerable<ArtistReadDto>>(ok.Value);
+        var list = Assert.IsType<IEnumerable<ArtistReadDto>>(ok.Value, exactMatch: false);
 
         Assert.Equal(2, list.Count());
     }
@@ -83,14 +89,12 @@ public class ArtistsControllerTests
 
         var result = await _controller.CreateArtist(dto);
 
-        var ok = Assert.IsType<OkObjectResult>(result);
-        dynamic payload = ok.Value;
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var artist = Assert.IsType<ArtistReadDto>(okResult.Value);
 
-        Assert.NotNull(payload.artistId);
-
-        var dbArtist = await _context.Artists.FindAsync((Guid)payload.artistId);
-        Assert.Equal("New Artist", dbArtist.Name);
-        Assert.Equal("123", dbArtist.UserId);
+        Assert.NotNull(artist);
+        Assert.Equal("New Artist", artist.Name);
+        Assert.Equal("123", artist.UserId);
         Assert.Equal(UserRole.Artist, user.Role);
     }
 
@@ -111,8 +115,8 @@ public class ArtistsControllerTests
 
         var result = await _controller.CreateArtist(dto);
 
-        var notFound = Assert.IsType<NotFoundObjectResult>(result);
-        Assert.Equal("User not found", ((dynamic)notFound.Value).message);
+        var notFound = Assert.IsType<NotFoundObjectResult>(result.Result);
+        Assert.Equal("User not found", notFound.Value);
     }
 
     // ----------------------------------------------------------
@@ -145,6 +149,7 @@ public class ArtistsControllerTests
         Assert.IsType<OkResult>(result);
 
         var updated = await _context.Artists.FindAsync(artist.Id);
+        Assert.NotNull(updated);
         Assert.Equal("New Name", updated.Name);
         Assert.Equal("New Bio", updated.Bio);
         Assert.Equal("new@test.com", updated.Email);

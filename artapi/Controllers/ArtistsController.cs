@@ -29,10 +29,10 @@ public class ArtistsController(AppDbContext context, UserManager<User> userManag
     // POST /api/artists
     [HttpPost]
     [Authorize(Policy = Policies.Admin)]
-    public async Task<IActionResult> CreateArtist([FromBody] ArtistCreateDto dto)
+    public async Task<ActionResult<ArtistReadDto>> CreateArtist([FromBody] ArtistCreateDto dto)
     {
         var user = await userManager.FindByIdAsync(dto.UserId);
-        if (user == null) return NotFound(new { message = "User not found" });
+        if (user == null) return NotFound("User not found");
 
         user.Role = UserRole.Artist;
         await userManager.AddToRoleAsync(user, "Artist");
@@ -49,7 +49,7 @@ public class ArtistsController(AppDbContext context, UserManager<User> userManag
         context.Artists.Add(artist);
         await context.SaveChangesAsync();
 
-        return Ok(new { message = "Artist created and role assigned", artistId = artist.Id });
+        return Ok(artist.ToDto());
     }
 
     // PUT /api/artists/{id}

@@ -20,7 +20,7 @@ jobs:
         working-directory: artapi
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       
     - name: Run Hadolint
       uses: hadolint/hadolint-action@v3.1.0
@@ -36,7 +36,7 @@ jobs:
         working-directory: artapi.Tests
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
@@ -60,7 +60,7 @@ jobs:
     needs: test
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4

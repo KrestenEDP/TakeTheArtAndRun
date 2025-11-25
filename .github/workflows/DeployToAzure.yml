@@ -48,10 +48,10 @@ jobs:
 
   BuildAndDeployContainerApp:
     runs-on: ubuntu-latest
-    needs: test
     defaults:
       run:
         working-directory: artapi
+    needs: test
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4

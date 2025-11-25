@@ -50,7 +50,7 @@ public class AuthController(
         };
 
         if (await userManager.FindByEmailAsync(dto.Email) != null)
-            return BadRequest(new { message = "Email is already registered." });
+            return BadRequest("Email is already registered.");
 
         var result = await userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
@@ -61,10 +61,10 @@ public class AuthController(
         var token = GenerateJwtToken(user);
         var userDto = GenerateUserDto(user);
 
-        return Ok(new
+        return Ok(new LoginResponseDto
         {
-            token = new JwtSecurityTokenHandler().WriteToken(token),
-            user = userDto
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+            User = userDto
         });
     }
 
@@ -77,15 +77,15 @@ public class AuthController(
             .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
         if (user == null || !await userManager.CheckPasswordAsync(user, dto.Password))
-            return Unauthorized(new { message = "Invalid credentials." });
+            return Unauthorized("Invalid credentials.");
 
         var token = GenerateJwtToken(user);
         var userDto = GenerateUserDto(user);
 
-        return Ok(new
+        return Ok(new LoginResponseDto
         {
-            token = new JwtSecurityTokenHandler().WriteToken(token),
-            user = userDto
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+            User = userDto
         });
     }
 
@@ -108,19 +108,30 @@ public class AuthController(
         return token;
     }
 
-    private static object GenerateUserDto(User user)
+    private static UserDto GenerateUserDto(User user)
     {
-        var userDto = new
+        return new UserDto
         {
-            user.Id,
-            user.UserName,
-            user.Email,
-            Role = user.Role.ToString(),
+            Id = user.Id,
+            UserName = user.UserName ?? "",
+            Email = user.Email ?? "",
+            Role = user.Role.ToString()
         };
-
-        return userDto;
     }
+
 }
 
 public record RegisterDto(string UserName, string Email, string Password);
 public record LoginDto(string Email, string Password);
+public class LoginResponseDto
+{
+    public string Token { get; set; } = null!;
+    public UserDto User { get; set; } = null!;
+}
+public class UserDto
+{
+    public string Id { get; set; } = null!;
+    public string UserName { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string Role { get; set; } = null!;
+}

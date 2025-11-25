@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -7,6 +7,7 @@ using artapi.Data;
 using artapi.DTOs;
 using artapi.Models;
 using Xunit;
+using Microsoft.AspNetCore.Http;
 
 namespace artapi.Tests;
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -7,6 +7,8 @@ using artapi.Controllers;
 using artapi.Data;
 using artapi.Models;
 using Xunit;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace artapi.Tests;
 
@@ -31,12 +33,12 @@ public class AuthControllerTests
         _userManagerMock = new Mock<UserManager<User>>(
             store.Object,
             Options.Create(new IdentityOptions()),
-            new Mock<IPasswordHasher<User>>().Object, 
-            new List<IUserValidator<User>>(),         
-            new List<IPasswordValidator<User>>(),    
-            new Mock<ILookupNormalizer>().Object,     
+            new Mock<IPasswordHasher<User>>().Object,
+            new List<IUserValidator<User>>(),
+            new List<IPasswordValidator<User>>(),
+            new Mock<ILookupNormalizer>().Object,
             new Mock<IdentityErrorDescriber>().Object,
-            new Mock<IServiceProvider>().Object,      
+            new Mock<IServiceProvider>().Object,
             new Mock<ILogger<UserManager<User>>>().Object
         );
 
@@ -66,9 +68,10 @@ public class AuthControllerTests
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var value = okResult.Value as dynamic;
-        Assert.NotNull(value!.token);
-        Assert.Equal(email, value.user.Email);
+        var response = Assert.IsType<LoginResponseDto>(okResult.Value);
+
+        Assert.NotNull(response.Token);
+        Assert.Equal(email, response.User.Email);
     }
 
     [Fact]
@@ -109,9 +112,10 @@ public class AuthControllerTests
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var value = okResult.Value as dynamic;
-        Assert.NotNull(value!.token);
-        Assert.Equal(user.Email, value.user.Email);
+        var response = Assert.IsType<LoginResponseDto>(okResult.Value);
+
+        Assert.NotNull(response.Token);
+        Assert.Equal(user.Email, response.User.Email);
     }
 
     [Fact]
@@ -122,7 +126,8 @@ public class AuthControllerTests
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        _userManagerMock.Setup(um => um.CheckPasswordAsync(user, "wrongpassword"))
+        _userManagerMock
+            .Setup(um => um.CheckPasswordAsync(It.Is<User>(u => u.Id == user.Id), "wrongpassword"))
             .ReturnsAsync(false);
 
         var dto = new LoginDto(user.Email, "wrongpassword");
@@ -132,7 +137,7 @@ public class AuthControllerTests
 
         // Assert
         var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-        Assert.Equal("Invalid credentials.", ((dynamic)unauthorized.Value!).message);
+        Assert.Equal("Invalid credentials.", unauthorized.Value);
     }
 
     [Fact]
@@ -146,6 +151,6 @@ public class AuthControllerTests
 
         // Assert
         var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-        Assert.Equal("Invalid credentials.", ((dynamic)unauthorized.Value!).message);
+        Assert.Equal("Invalid credentials.", unauthorized.Value);
     }
 }

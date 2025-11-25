@@ -30,7 +30,5 @@ COPY --from=publish /app/publish .
 
 # Environment variables for production (values will be set at runtime)
 ENV ASPNETCORE_ENVIRONMENT=Production
-ENV ConnectionStrings__DefaultConnection=""
-ENV Jwt__Key=""
 
 ENTRYPOINT ["dotnet", "artapi.dll"]

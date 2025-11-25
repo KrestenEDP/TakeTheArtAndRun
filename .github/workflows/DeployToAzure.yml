@@ -15,6 +15,9 @@ env:
 jobs:
   dockerfile-lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: artapi
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
@@ -28,6 +31,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: dockerfile-lint
+    defaults:
+      run:
+        working-directory: artapi.Tests
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4

@@ -49,6 +49,9 @@ jobs:
   BuildAndDeployContainerApp:
     runs-on: ubuntu-latest
     needs: test
+    defaults:
+      run:
+        working-directory: artapi
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
@@ -66,7 +69,7 @@ jobs:
     - name: Container App deploy
       uses: azure/container-apps-deploy-action@v1
       with:
-        appSourcePath: ${{ github.workspace }}
+        appSourcePath: ${{ github.workspace }}/artapi
         acrName: ${{ env.CONTAINER_REGISTRY_NAME }}
         acrUsername: ${{ secrets.TakeTheArtAndRun_USERNAME_D7D4 }}
         acrPassword: ${{ secrets.TakeTheArtAndRun_PASSWORD_D7D4 }}

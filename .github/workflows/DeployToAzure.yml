@@ -25,7 +25,7 @@ jobs:
     - name: Run Hadolint
       uses: hadolint/hadolint-action@v3.1.0
       with:
-        dockerfile: Dockerfile
+        dockerfile: artapi/Dockerfile
         failure-threshold: error
 
   test:
